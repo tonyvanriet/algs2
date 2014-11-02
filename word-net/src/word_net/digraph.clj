@@ -49,26 +49,37 @@
 
 (defn digraph->edges
 
+  "Converts the digraph into an array of edge connections."
+
   [digraph]
 
-  (loop [vertices digraph
-         connections (val (first vertices))
-         edges []]
+  (let [vertices digraph]
 
+    ; ugly duplicate nil check here so an empty digraph doesn't cause an ex
+    ; when used in the loop bindings.
     (if (nil? (first vertices))
-      edges
 
-      (if (nil? (first connections))
+      []
 
-        (recur (rest vertices)
-               (if (nil? (first (rest vertices)))
-                 nil
-                 (val (first (rest vertices))))
-               edges)
+      (loop [vertices vertices
+             connections (val (first vertices))
+             edges []]
 
-        (recur vertices
-               (rest connections)
-               (conj edges [(key (first vertices)) (first connections)]))))))
+        (if (nil? (first vertices))
+
+          edges
+
+          (if (nil? (first connections))
+
+            (recur (rest vertices)
+                   (if (nil? (first (rest vertices)))
+                     nil
+                     (val (first (rest vertices))))
+                   edges)
+
+            (recur vertices
+                   (rest connections)
+                   (conj edges [(key (first vertices)) (first connections)]))))))))
 
 
 (digraph->edges (build-new-digraph))
