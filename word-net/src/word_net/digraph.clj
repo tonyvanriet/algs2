@@ -110,6 +110,12 @@
   (build-new-digraph (map reverse-edge (digraph->edges digraph))))
 
 
+(defn print-digraph
+  [digraph]
+  (println (num-vertices digraph) "vertices," (num-edges digraph) "edges.")
+  (doall (map println digraph))
+  nil)
+
 
 
 
