@@ -8,14 +8,18 @@
 
 
 (defn add-edge
+
   ([v w digraph]
+
    (let [connections (get digraph v)]
      (assoc-in digraph
                [v]
                (if (nil? connections)
                  (conj (new-connections) w)
                  (conj connections w)))))
+
   ([[v w] digraph]
+
    (add-edge v w digraph)))
 
 
@@ -36,5 +40,42 @@
           digraph (build-new-digraph)]
      (if (nil? (first edges))
        digraph
-       (recur (rest edges) (add-edge (first edges) digraph))))))
+       (recur (rest edges)
+              (add-edge (first edges) digraph))))))
 
+
+(build-new-digraph [[1 2] [3 4] [3 5]])
+
+
+(defn digraph->edges
+
+  [digraph]
+
+  (loop [vertices digraph
+         connections (val (first vertices))
+         edges []]
+
+    (if (nil? (first vertices))
+      edges
+
+      (if (nil? (first connections))
+
+        (recur (rest vertices)
+               (if (nil? (first (rest vertices)))
+                 nil
+                 (val (first (rest vertices))))
+               edges)
+
+        (recur vertices
+               (rest connections)
+               (conj edges [(key (first vertices)) (first connections)]))))))
+
+
+(digraph->edges (build-new-digraph))
+
+(digraph->edges (build-new-digraph [[1 2] [3 4] [3 5]]))
+
+
+(defn reverse-digraph
+  [digraph]
+  )
