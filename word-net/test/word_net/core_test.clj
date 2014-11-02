@@ -1,7 +1,7 @@
 (ns word-net.core-test
   (:require [clojure.test :refer :all])
   (:require word-net.core)
-  (:require [word-net.digraph :as digraph]))
+  (:require [word-net.digraph :refer :all]))
 
 
 
@@ -9,34 +9,49 @@
 
 (deftest new-connections-returns-empty-set
   (testing "new-connections returns an empty set"
-    (is (= (digraph/new-connections) #{}))))
+    (is (= (new-connections) #{}))))
 
 
-(deftest add-edge
+(deftest add-edge-adds-an-edge
   (testing "add-edge adds an edge"
-    (is (= (digraph/add-edge 1 2 (digraph/build-new-digraph))
+    (is (= (add-edge 1 2 (build-new-digraph))
            {1 #{2}}))))
 
 
 (deftest build-new-digraph-returns-empty-map
   (testing "build-new-digraph with no edges returns an empty map"
-    (is (= (digraph/build-new-digraph)))))
+    (is (= (build-new-digraph) {}))))
 
 
 (deftest build-new-digraph-with-some-edges
   (testing "build-new-digraph returns correct digraph"
-    (is (= (digraph/build-new-digraph
+    (is (= (build-new-digraph
             [[1 2] [3 5]]) {1 #{2}
                             3 #{5}}))))
 
 
-(deftest num-vertices
+(deftest num-vertices-returns-correct-num-vertices
   (testing "num-vertices"
-    (is (= 3 (digraph/num-vertices
-              (digraph/build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
+    (is (= 3 (num-vertices
+              (build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
 
 
-(deftest num-edges
+(deftest num-edges-returns-correct-num-edges
   (testing "num-edges"
-    (is (= 4 (digraph/num-edges (digraph/build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
+    (is (= 4 (num-edges (build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
 
+
+(deftest digraph->edges-returns-edges
+  (testing "digraph-edges returns edges"
+    (def edges #{[1 2] [3 4] [3 5]})
+    (is (= (digraph->edges (build-new-digraph edges))))))
+
+
+(deftest reverse-edge-reverses-edge
+  (testing "reverse-edge reverses an edge"
+    (is (= (reverse-edge [1 2]) [2 1]))))
+
+
+(deftest reverse-digraph-returns-reversed-digraph
+  (testing "reverse-digraph returns reversed digraph"
+    (is (= (reverse-digraph {1 #{2 3} 4 #{5 6}}) {2 #{1} 3 #{1} 5 #{4} 6 #{4}}))))
