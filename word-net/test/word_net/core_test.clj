@@ -1,6 +1,6 @@
 (ns word-net.core-test
   (:require [clojure.test :refer :all])
-  (:require word-net.core)
+  (:require [word-net.core :refer :all])
   (:require [word-net.digraph :refer :all]))
 
 
@@ -26,8 +26,7 @@
 (deftest build-new-digraph-with-some-edges
   (testing "build-new-digraph returns correct digraph"
     (is (= (build-new-digraph
-            [[1 2] [3 5]]) {1 #{2}
-                            3 #{5}}))))
+            [[1 2] [3 5]]) {1 #{2} 3 #{5}}))))
 
 
 (deftest num-vertices-returns-correct-num-vertices
@@ -54,4 +53,6 @@
 
 (deftest reverse-digraph-returns-reversed-digraph
   (testing "reverse-digraph returns reversed digraph"
-    (is (= (reverse-digraph {1 #{2 3} 4 #{5 6}}) {2 #{1} 3 #{1} 5 #{4} 6 #{4}}))))
+    (is (= (reverse-digraph {1 #{2 3} 4 #{5 6}})
+           {2 #{1} 3 #{1} 5 #{4} 6 #{4}}))))
+
