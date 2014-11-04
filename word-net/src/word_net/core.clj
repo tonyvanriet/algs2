@@ -1,6 +1,8 @@
 (ns word-net.core
   (:gen-class)
+  (:require [clojure.java.io :as io])
   (:require word-net.digraph))
+
 
 (defn -main
   "I don't do a whole lot ... yet."
@@ -33,3 +35,35 @@
 ;;    public static void main(String[] args)
 ;; }
 
+
+(def synsets-file-name "synsets3.txt")
+(def hypernyms-file-name "hypernyms6TwoAncestors.txt")
+
+(def file-path "src/word_net/word-net-testing/")
+(def synsets-file-path (str file-path synsets-file-name))
+(def hypernyms-file-path (str file-path hypernyms-file-name))
+
+
+
+
+(defn lazy-file-lines [file]
+  "returns a lazy sequence of lines from the given file"
+  (letfn [(helper [rdr]
+                  (lazy-seq
+                    (if-let [line (.readLine rdr)]
+                      (cons line (helper rdr))
+                      (do (.close rdr) nil))))]
+         (helper (clojure.java.io/reader file))))
+
+
+
+
+(defn get-synsets-from-file
+
+  [file-name]
+
+  (doseq [line (lazy-file-lines file-name)]
+    (println "sadf" line)))
+
+
+(get-synsets-from-file synsets-file-path)

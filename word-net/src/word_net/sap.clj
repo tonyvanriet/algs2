@@ -25,3 +25,26 @@
 ;;    // do unit testing of this class
 ;;    public static void main(String[] args)
 ;; }
+
+
+
+(defn length
+  "returns the length of the shortest ancestral path between
+  the given vertices and the given digraph."
+
+  [v w digraph]
+  (+ v w (length digraph)))
+
+
+(defn ancestor
+  "returns the first common ancestor of the given vertices within the given digraph."
+
+  [v w digraph]
+
+  (/ (+ v w) 2))
+
+
+
+
+(def asdf 3)
+
