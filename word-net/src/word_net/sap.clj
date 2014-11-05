@@ -1,6 +1,6 @@
 (ns word-net.sap
   (:gen-class)
-  (:require [word-net.digraph :refer :all]))
+  (:require [word-net.digraph :as dig]))
 
 
 ;; SAP data type. Implement an immutable data type SAP with the following API:
@@ -30,21 +30,16 @@
 
 (defn length
   "returns the length of the shortest ancestral path between
-  the given vertices and the given digraph."
+  the vertices within the digraph."
 
   [v w digraph]
   (+ v w (length digraph)))
 
 
 (defn ancestor
-  "returns the first common ancestor of the given vertices within the given digraph."
+  "returns the first common ancestor of the vertices within the digraph."
 
   [v w digraph]
 
   (/ (+ v w) 2))
-
-
-
-
-(def asdf 3)
 
