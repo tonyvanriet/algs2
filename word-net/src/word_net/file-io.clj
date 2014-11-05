@@ -38,7 +38,10 @@
 
 
 (get-synsets-from-file synsets-file-path)
+(def synsets
+    (get-synsets-from-file synsets-file-path))
 
+synsets
 
 (defn get-hypernym-digraph-from-file
 

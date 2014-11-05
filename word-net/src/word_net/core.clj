@@ -36,4 +36,23 @@
 ;; }
 
 
-(fio/get-synsets-from-file fio/synsets-file-path)
+
+(def synsets
+  (fio/get-synsets-from-file (str fio/file-path "synsets6.txt")))
+
+
+(defn nouns
+  "returns all wordnet nouns in the synsets"
+  [synsets]
+  (mapcat #(:nouns %) synsets))
+
+(nouns synsets)
+
+
+(defn noun?
+  [word synsets]
+  (not (nil? (some #(= word %) (nouns synsets)))))
+
+
+(noun? "a" synsets)
+(noun? "z" synsets)
