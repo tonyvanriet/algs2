@@ -34,7 +34,7 @@
         (let [[id nouns-raw gloss] (str/split (first synsets-file-lines) #",")]
           (let [nouns (str/split nouns-raw #" ")]
             (recur (rest synsets-file-lines)
-                   (conj synsets {:id id :nouns nouns}))))))))
+                   (conj synsets {:id (read-string id) :nouns nouns}))))))))
 
 
 (get-synsets-from-file synsets-file-path)

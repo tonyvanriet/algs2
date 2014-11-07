@@ -40,6 +40,9 @@
 (def synsets
   (fio/get-synsets-from-file (str fio/file-path "synsets6.txt")))
 
+(def hypernym-digraph
+  (fio/get-hypernym-digraph-from-file (str fio/file-path "hypernyms6TwoAncestors.txt")))
+
 
 (defn nouns
   "returns all wordnet nouns in the synsets"
@@ -53,6 +56,49 @@
   [word synsets]
   (not (nil? (some #(= word %) (nouns synsets)))))
 
-
 (noun? "a" synsets)
 (noun? "z" synsets)
+
+
+
+(defn synset-has-noun?
+  [synset noun]
+  (some #(= noun %) (:nouns synset)))
+
+
+(defn get-synset-id-for-noun
+  [noun synsets]
+  (:id (first (filter #(synset-has-noun? % noun) synsets))))
+
+
+(get-synset-id-for-noun "b" synsets)
+
+
+
+(defn distance
+  "shortest distance from noun-a to noun-b"
+  [noun-a noun-b synsets hypernym-digraph]
+
+  (let [noun-a-synset-id (get-synset-id-for-noun noun-a synsets)
+        noun-b-synset-id (get-synset-id-for-noun noun-b synsets)]
+
+    (- noun-b-synset-id noun-a-synset-id)))
+
+
+(distance "b" "c" synsets hypernym-digraph)
+
+
+
+(defn sap
+  "the synset that is the common ancestor of noun-a and b in a
+  common ancestral path."
+  [noun-a noun-b synsets hypernym-digraph]
+
+  (let [noun-a-synset-id (get-synset-id-for-noun noun-a synsets)
+        noun-b-synset-id (get-synset-id-for-noun noun-b synsets)]
+
+    (- noun-b-synset-id noun-a-synset-id)))
+
+
+
+  )
