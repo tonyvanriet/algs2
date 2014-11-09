@@ -27,7 +27,7 @@
 ;; }
 
 
-(def test-digraph (dig/build-new-digraph [[1 2] [2 6] [3 4] [3 5]]))
+(def test-digraph (dig/build-new-digraph [[1 2] [2 6] [6 7] [3 4] [3 6] [4 2] [4 6]]))
 
 
 (defn length
@@ -68,34 +68,36 @@
 
 
 
-;; (defn breadth-first
-;;   [digraph]
+(defn breadth-first
+  [digraph]
 
-;;   (def vertex-queue [(first digraph)])
+  (loop [vertices-to-visit (conj {} (first digraph))
+         visited-vertices {}
+         de-infinitizer 0]
 
-;;   ; visit next vertex in the queue, mark it
+    (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
 
-;;   (loop [vertex-queue [(first digraph)]
-;;          digraph digraph
-;;          visited-vertices {}]
+      visited-vertices
 
-;;     (def vertex-visiting (first vertex-queue))
+      (do
+        (let [vertex-visiting (first vertices-to-visit)]
 
-;;     (if-let [vertex-visiting (first vertex-queue)]
+          (println (str "visiting " vertex-visiting))
 
-;;       (if (some (partial = vertex-visiting) visited-vertices)
+          (if (some (partial = (first vertex-visiting)) (map (partial key) visited-vertices))
 
-;;         (recur (rest vertex-queue)
-;;                digraph
-;;                visited-vertices)
+            (do
+              (recur (rest vertices-to-visit)
+                     visited-vertices
+                     (inc de-infinitizer)))
 
-;;         (recur (conj vertex-queue
-;;                      (get-vertices-for-indeces digraph
-;;                                                (val vertex-visiting)))
-;;                digraph
-;;                (rest visited-vertices)))
-;;       "done")))
+            (do
+              (println (str "adding vertices to the queue " (get-vertices-for-indeces digraph (val vertex-visiting))))
+              (recur (merge (if (empty? (rest vertices-to-visit)) {} (into {} (rest vertices-to-visit)))
+                           (get-vertices-for-indeces digraph (val vertex-visiting)))
+                     (conj visited-vertices vertex-visiting)
+                     (inc de-infinitizer)))))))))
 
 
+(breadth-first test-digraph)
 
-;; (breadth-first test-digraph)
