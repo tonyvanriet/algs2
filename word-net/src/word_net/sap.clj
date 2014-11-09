@@ -82,8 +82,6 @@
       (do
         (let [vertex-visiting (first vertices-to-visit)]
 
-          (println (str "visiting " vertex-visiting))
-
           (if (some (partial = (first vertex-visiting)) (map (partial key) visited-vertices))
 
             (do
@@ -92,9 +90,8 @@
                      (inc de-infinitizer)))
 
             (do
-              (println (str "adding vertices to the queue " (get-vertices-for-indeces digraph (val vertex-visiting))))
-              (recur (merge (if (empty? (rest vertices-to-visit)) {} (into {} (rest vertices-to-visit)))
-                           (get-vertices-for-indeces digraph (val vertex-visiting)))
+              (recur (merge (into {} (rest vertices-to-visit))
+                            (get-vertices-for-indeces digraph (val vertex-visiting)))
                      (conj visited-vertices vertex-visiting)
                      (inc de-infinitizer)))))))))
 
