@@ -67,34 +67,71 @@
 (get-vertices-for-indeces test-digraph #{2 3})
 
 
+(defn contains-vertex-id?
+  [vertices vertex-id]
+  (some? (some (partial = vertex-id) (map (partial key) vertices))))
 
-(defn breadth-first
-  [digraph]
+(contains-vertex-id? test-digraph 6)
+(contains-vertex-id? test-digraph 9)
 
-  (loop [vertices-to-visit (conj {} (first digraph))
+
+(defn shortest-distances
+
+  "uses a breadth-first search to compute the shortest-distance to each vertex
+  starting from the given vertex. the results are returns as a map keyed by the vertex
+  id."
+
+  [digraph starting-vertex-id]
+
+  (def starting-vertex {starting-vertex-id (get digraph starting-vertex-id)})
+
+  (loop [vertices-to-visit (conj {} starting-vertex)
          visited-vertices {}
+         distances (assoc-in {} [starting-vertex-id] 0)
          de-infinitizer 0]
+
+    (println "distances " distances)
 
     (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
 
-      visited-vertices
+      distances
 
       (do
-        (let [vertex-visiting (first vertices-to-visit)]
+        (let [vertex-visiting (first vertices-to-visit)
+              visiting-distance (get distances (first vertex-visiting))]
 
-          (if (some (partial = (first vertex-visiting)) (map (partial key) visited-vertices))
+          (println "visiting-distance " visiting-distance)
+          (println "distances " distances)
+
+          (if (contains-vertex-id? visited-vertices (first vertex-visiting))
+
+            (recur (rest vertices-to-visit)
+                   visited-vertices
+                   distances
+                   (inc de-infinitizer))
 
             (do
-              (recur (rest vertices-to-visit)
-                     visited-vertices
-                     (inc de-infinitizer)))
 
-            (do
+              (def connected-vertices (get-vertices-for-indeces digraph (val vertex-visiting)))
+              (def connected-vertices-without-distance
+                (into {}
+                      (filter #(not (contains-vertex-id? distances %)) connected-vertices)))
+
+              (println "connected-vertices-without-distance " connected-vertices-without-distance)
+
+              ; add distances for newly connected vertices
+              (def updated-distances
+                (reduce (fn [distances vertex]
+                          (assoc-in distances [(first vertex)] (inc visiting-distance)))
+                        distances connected-vertices-without-distance))
+              (println "distances after append " updated-distances)
+
               (recur (merge (into {} (rest vertices-to-visit))
                             (get-vertices-for-indeces digraph (val vertex-visiting)))
                      (conj visited-vertices vertex-visiting)
+                     (merge distances {(first vertex-visiting) (inc visiting-distance)})
                      (inc de-infinitizer)))))))))
 
 
-(breadth-first test-digraph)
+(shortest-distances test-digraph 4)
 
