@@ -67,13 +67,6 @@
 (get-vertices-for-indeces test-digraph #{2 3})
 
 
-(defn contains-vertex-id?
-  [vertices vertex-id]
-  (some? (some (partial = vertex-id) (map (partial key) vertices))))
-
-(contains-vertex-id? test-digraph 6)
-(contains-vertex-id? test-digraph 9)
-
 
 (defn shortest-distances
 
@@ -83,6 +76,8 @@
 
   [digraph starting-vertex-id]
 
+  (println "running shortest distance starting from vertex" starting-vertex-id "on" digraph)
+
   (def starting-vertex {starting-vertex-id (get digraph starting-vertex-id)})
 
   (loop [vertices-to-visit (conj {} starting-vertex)
@@ -90,7 +85,9 @@
          distances (assoc-in {} [starting-vertex-id] 0)
          de-infinitizer 0]
 
+    (println ".............")
     (println "distances " distances)
+    (println "vertices-to-visit" vertices-to-visit)
 
     (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
 
@@ -101,9 +98,8 @@
               visiting-distance (get distances (first vertex-visiting))]
 
           (println "visiting-distance " visiting-distance)
-          (println "distances " distances)
 
-          (if (contains-vertex-id? visited-vertices (first vertex-visiting))
+          (if (contains? visited-vertices (first vertex-visiting))
 
             (recur (rest vertices-to-visit)
                    visited-vertices
@@ -113,9 +109,11 @@
             (do
 
               (def connected-vertices (get-vertices-for-indeces digraph (val vertex-visiting)))
+              (println "connected-vertices" connected-vertices)
+
               (def connected-vertices-without-distance
                 (into {}
-                      (filter #(not (contains-vertex-id? distances %)) connected-vertices)))
+                      (filter #(not (contains? distances (key %))) connected-vertices)))
 
               (println "connected-vertices-without-distance " connected-vertices-without-distance)
 
@@ -129,7 +127,7 @@
               (recur (merge (into {} (rest vertices-to-visit))
                             (get-vertices-for-indeces digraph (val vertex-visiting)))
                      (conj visited-vertices vertex-visiting)
-                     (merge distances {(first vertex-visiting) (inc visiting-distance)})
+                     updated-distances
                      (inc de-infinitizer)))))))))
 
 
