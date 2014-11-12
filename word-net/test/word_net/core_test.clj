@@ -1,7 +1,8 @@
 (ns word-net.core-test
   (:require [clojure.test :refer :all])
   (:require [word-net.core :refer :all])
-  (:require [word-net.digraph :refer :all]))
+  (:require [word-net.digraph :refer :all])
+  (:require [word-net.sap :refer [length ancestor]]))
 
 
 
@@ -56,3 +57,25 @@
     (is (= (reverse-digraph {1 #{2 3} 4 #{5 6}})
            {2 #{1} 3 #{1} 5 #{4} 6 #{4}}))))
 
+
+(def test-digraph (build-new-digraph
+                   [[12 10] [11 10] [10 5] [9 5] [8 3] [7 3]
+                    [3 1] [4 1] [5 1] [1 0] [2 0]]))
+
+; the shortest ancestral path between 3 and 11 has length 4 (with common ancestor 1).
+
+(deftest sap-length-test
+  (testing "sap length"
+    (is (= 4 (length 3 11 test-digraph)))))
+
+(deftest sap-vertex-test
+  (testing "closest ancestor"
+    (is (= 1 (ancestor 3 11 test-digraph)))))
+
+(deftest sap-length-test2
+  (testing "sap length"
+    (is (= 3 (length 2 5 test-digraph)))))
+
+(deftest sap-vertex-test2
+  (testing "closest ancestor"
+    (is (= 0 (ancestor 2 5 test-digraph)))))
