@@ -16,7 +16,7 @@
 (deftest add-edge-adds-an-edge
   (testing "add-edge adds an edge"
     (is (= (add-edge 1 2 (build-new-digraph))
-           {1 #{2}}))))
+           {1 #{2}, 2 #{}}))))
 
 
 (deftest build-new-digraph-returns-empty-map
@@ -27,12 +27,12 @@
 (deftest build-new-digraph-with-some-edges
   (testing "build-new-digraph returns correct digraph"
     (is (= (build-new-digraph
-            [[1 2] [3 5]]) {1 #{2} 3 #{5}}))))
+            [[1 2] [3 5]]) {1 #{2}, 3 #{5}, 2 #{}, 5 #{}}))))
 
 
 (deftest num-vertices-returns-correct-num-vertices
   (testing "num-vertices"
-    (is (= 3 (num-vertices
+    (is (= 7 (num-vertices
               (build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
 
 
@@ -54,13 +54,14 @@
 
 (deftest reverse-digraph-returns-reversed-digraph
   (testing "reverse-digraph returns reversed digraph"
-    (is (= (reverse-digraph {1 #{2 3} 4 #{5 6}})
-           {2 #{1} 3 #{1} 5 #{4} 6 #{4}}))))
+    (is (= (reverse-digraph {1 #{2 3}, 2 #{}, 3 #{}, 4 #{5 6}, 5 #{}, 6 #{}})
+           {1 #{}, 2 #{1}, 3 #{1}, 4 #{}, 5 #{4}, 6 #{4}}))))
 
 
-(def test-digraph (build-new-digraph
-                   [[12 10] [11 10] [10 5] [9 5] [8 3] [7 3]
-                    [3 1] [4 1] [5 1] [1 0] [2 0]]))
+(def test-digraph-edges [[12 10] [11 10] [10 5] [9 5] [8 3]
+                         [7 3] [3 1] [4 1] [5 1] [1 0] [2 0]])
+
+(def test-digraph (build-new-digraph test-digraph-edges))
 
 ; the shortest ancestral path between 3 and 11 has length 4 (with common ancestor 1).
 

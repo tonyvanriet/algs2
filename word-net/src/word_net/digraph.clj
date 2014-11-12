@@ -24,15 +24,24 @@
   ([v w digraph]
 
    (let [connections (get digraph v)]
-     (assoc-in digraph
-               [v]
-               (if (nil? connections)
-                 (conj (new-connections) w)
-                 (conj connections w)))))
+
+     (def digraph-with-new-edge
+       (assoc-in digraph
+                 [v]
+                 (if (nil? connections)
+                   (conj (new-connections) w)
+                   (conj connections w))))
+
+     (if (contains? digraph-with-new-edge w)
+       digraph-with-new-edge
+       (assoc-in digraph-with-new-edge
+                 [w]
+                 (new-connections)))))
+
 
   ([[v w] digraph]
-
    (add-edge v w digraph)))
+
 
 
 (defn num-vertices
