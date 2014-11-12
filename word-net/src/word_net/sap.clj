@@ -51,7 +51,7 @@
 
   [digraph starting-vertex-id]
 
-  (println "running shortest distance starting from vertex" starting-vertex-id "on" digraph)
+  ;(println "running shortest distance starting from vertex" starting-vertex-id "on" digraph)
 
   (def starting-vertex {starting-vertex-id (get digraph starting-vertex-id)})
 
@@ -99,25 +99,42 @@
 
 
 
-(defn length
+(defn ancestral-distances
 
+  "returns a map keyed by all of the ancestral verteces of v and w along with
+  the distance between v and w through that ancestor."
+
+  [v w digraph]
+
+  ; perform a breadth-first search from each vertex v and w, accumulating the shortest distance
+  ; to each other vertex.
+  (def distances-from-v (shortest-distances digraph v))
+  (def distances-from-w (shortest-distances digraph w))
+
+  (reduce (fn [ancestral-distances vertex-id]
+            (let [distance-from-v (get distances-from-v vertex-id)]
+              (if-let [distance-from-w (get distances-from-w vertex-id)]
+                (assoc-in ancestral-distances
+                          [vertex-id]
+                          (+ distance-from-v distance-from-w))
+                ancestral-distances)))
+          {}
+          (keys distances-from-v)))
+
+
+
+(defn length
   "returns the length of the shortest ancestral path between
   the vertices within the digraph."
   [v w digraph]
-
-  ; breadth-first from each vertex, marking the distance to the vertex
-  ; as we go. then look through those distances for the smallest sum.
-
-
-  )
+  (apply min (vals (ancestral-distances v w digraph))))
 
 
 
 (defn ancestor
-  "returns the first common ancestor of the vertices within the digraph."
-
+  "returns the closest common ancestor of the vertices within the digraph."
   [v w digraph]
+  (key (apply min-key #(val %) (ancestral-distances v w digraph))))
 
-  (/ (+ v w) 2))
 
 
