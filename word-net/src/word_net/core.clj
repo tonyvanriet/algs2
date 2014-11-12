@@ -3,7 +3,8 @@
   (:require [clojure.java.io :as io])
   (:require [clojure.string :as str])
   (:require [word-net.digraph :as dig])
-  (:require [word-net.file-io :as fio]))
+  (:require [word-net.file-io :as fio])
+  (:require [word-net.sap :as sap]))
 
 
 (defn -main
@@ -101,4 +102,3 @@
 
 
 
-  )

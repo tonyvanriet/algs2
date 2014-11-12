@@ -27,32 +27,7 @@
 ;; }
 
 
-(def test-digraph (dig/build-new-digraph [[1 2] [2 6] [6 7] [3 4] [3 6] [4 2] [4 6]]))
-
-
-(defn length
-
-  "returns the length of the shortest ancestral path between
-  the vertices within the digraph."
-  [v w digraph]
-
-  ; breadth-first from each vertex, marking the distance to the vertex
-  ; as we go. then look through those distances for the smallest sum.
-
-
-
-
-  )
-
-
-
-(defn ancestor
-  "returns the first common ancestor of the vertices within the digraph."
-
-  [v w digraph]
-
-  (/ (+ v w) 2))
-
+(def test-digraph (dig/build-new-digraph [[1 2] [2 6] [6 7] [3 4] [3 6] [4 2] [4 6] [7 8] [8 2]]))
 
 
 (defn get-vertices-for-indeces
@@ -85,10 +60,6 @@
          distances (assoc-in {} [starting-vertex-id] 0)
          de-infinitizer 0]
 
-    (println ".............")
-    (println "distances " distances)
-    (println "vertices-to-visit" vertices-to-visit)
-
     (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
 
       distances
@@ -96,8 +67,6 @@
       (do
         (let [vertex-visiting (first vertices-to-visit)
               visiting-distance (get distances (first vertex-visiting))]
-
-          (println "visiting-distance " visiting-distance)
 
           (if (contains? visited-vertices (first vertex-visiting))
 
@@ -109,20 +78,15 @@
             (do
 
               (def connected-vertices (get-vertices-for-indeces digraph (val vertex-visiting)))
-              (println "connected-vertices" connected-vertices)
-
               (def connected-vertices-without-distance
                 (into {}
                       (filter #(not (contains? distances (key %))) connected-vertices)))
-
-              (println "connected-vertices-without-distance " connected-vertices-without-distance)
 
               ; add distances for newly connected vertices
               (def updated-distances
                 (reduce (fn [distances vertex]
                           (assoc-in distances [(first vertex)] (inc visiting-distance)))
                         distances connected-vertices-without-distance))
-              (println "distances after append " updated-distances)
 
               (recur (merge (into {} (rest vertices-to-visit))
                             (get-vertices-for-indeces digraph (val vertex-visiting)))
@@ -132,4 +96,28 @@
 
 
 (shortest-distances test-digraph 4)
+
+
+
+(defn length
+
+  "returns the length of the shortest ancestral path between
+  the vertices within the digraph."
+  [v w digraph]
+
+  ; breadth-first from each vertex, marking the distance to the vertex
+  ; as we go. then look through those distances for the smallest sum.
+
+
+  )
+
+
+
+(defn ancestor
+  "returns the first common ancestor of the vertices within the digraph."
+
+  [v w digraph]
+
+  (/ (+ v w) 2))
+
 
