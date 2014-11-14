@@ -9,7 +9,17 @@
 
 (defn -main
   [& args]
-  println("running main"))
+
+  (def synsets-file-name (first args))
+  (def hypernyms-file-name (second args))
+
+  (def synsets
+    (fio/get-synsets-from-file (str fio/file-path synsets-file-name)))
+
+  (def hypernym-digraph
+    (fio/get-hypernym-digraph-from-file (str fio/file-path hypernyms-file-name)))
+
+  (println (sap/shortest-distances hypernym-digraph 16903)))
 
 
 ;; WordNet data type. Implement an immutable data type WordNet with the following API:
@@ -37,12 +47,14 @@
 ;; }
 
 
+(def synsets-file-name "synsets.txt")
+(def hypernyms-file-name "hypernyms300K.txt")
 
 (def synsets
-  (fio/get-synsets-from-file (str fio/file-path "synsets6.txt")))
+  (fio/get-synsets-from-file (str fio/file-path synsets-file-name)))
 
 (def hypernym-digraph
-  (fio/get-hypernym-digraph-from-file (str fio/file-path "hypernyms6TwoAncestors.txt")))
+  (fio/get-hypernym-digraph-from-file (str fio/file-path hypernyms-file-name)))
 
 
 (defn nouns
