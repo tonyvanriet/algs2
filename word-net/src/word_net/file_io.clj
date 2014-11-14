@@ -8,7 +8,7 @@
 (def synsets-file-name "synsets6.txt")
 (def hypernyms-file-name "hypernyms6TwoAncestors.txt")
 
-(def file-path "src/word_net/word-net-testing/")
+(def file-path "src/word_net/word-net-test-data/")
 (def synsets-file-path (str file-path synsets-file-name))
 (def hypernyms-file-path (str file-path hypernyms-file-name))
 
