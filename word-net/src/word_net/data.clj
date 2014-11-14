@@ -61,6 +61,11 @@
   (get-synset-for-id (get-synset-id-for-noun noun synsets) synsets))
 
 
+(defn println-synset
+  [synset & rest]
+  (println (:nouns synset) (:id synset)))
+
+
 
 (defn distance
   "shortest distance from noun-a to noun-b"
@@ -90,6 +95,7 @@
 
   [synsets hypernym-digraph]
 
+  (println "")
   (println "-------------------------")
 
   (def nouns (nouns-in-synsets synsets))
@@ -99,20 +105,21 @@
   (def random-synsets (map #(get-synset-for-noun % synsets) random-nouns))
 
   ;(println random-nouns)
-  (println (:nouns (first random-synsets)))
-  (println (:nouns (second random-synsets)))
+  (println-synset (first random-synsets))
+  (println-synset (second random-synsets))
 
 
   (def random-synset-ids (map #(:id %) random-synsets))
 
   (def closest-ancestor (sap (first random-nouns)
-                                  (second random-nouns)
-                                  synsets
-                                  hypernym-digraph))
+                             (second random-nouns)
+                             synsets
+                             hypernym-digraph))
 
   (def closest-ancestor-distance (distance (first random-nouns)
-                                                (second random-nouns)
-                                                synsets
-                                                hypernym-digraph))
+                                           (second random-nouns)
+                                           synsets
+                                           hypernym-digraph))
 
-  (println closest-ancestor-distance ":" (:nouns closest-ancestor)))
+  (println-synset closest-ancestor)
+  (println closest-ancestor-distance))
