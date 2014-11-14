@@ -56,8 +56,8 @@ synsets
 
       (do
         (let [ids (str/split (first hypernyms-file-lines) #",")
-              synset-id (first ids)
-              hypernym-ids (rest ids)]
+              synset-id (read-string (first ids))
+              hypernym-ids (map read-string (rest ids))]
 
           (def digraph-after-edges
             (reduce (fn [digraph hypernym-id]
