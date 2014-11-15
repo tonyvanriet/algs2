@@ -43,7 +43,7 @@
 
 
 
-(defn -shortest-distances
+(defn shortest-distances
 
   "uses a breadth-first search to compute the shortest-distance to each vertex
   starting from the given vertex. the results are returns as a map keyed by the vertex

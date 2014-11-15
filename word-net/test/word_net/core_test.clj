@@ -75,8 +75,16 @@
                 "Nathaniel_Bowditch"
                 (fio/get-synsets-from-file (str fio/file-path "synsets.txt"))
                 (fio/get-hypernym-digraph-from-file (str fio/file-path "hypernyms.txt")))))
-  (is (= "organism" (first (:nouns ancestor-synset)))))
+  (is (= "organism" (first (:nouns ancestor-synset))))
 
-
+  ; the edges in the larger hypernym files just seem wrong,
+  ; as if they're refering to a different synsets file
+  (testing "ancestor search in synsets and hypernyms100k"
+    (def ancestor-synset
+      (data/sap "'hood"
+                "nymphet"
+                (fio/get-synsets-from-file (str fio/file-path "synsets.txt"))
+                (fio/get-hypernym-digraph-from-file (str fio/file-path "hypernyms100k.txt")))))
+  (is (= "Phytophthora_infestans" (first (:nouns ancestor-synset)))))
 
 
