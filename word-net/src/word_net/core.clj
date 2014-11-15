@@ -41,12 +41,16 @@
 
   ;(time (data/random-ancestor-search synsets hypernym-digraph))
 
-  ;(crit/bench (random-ancestor-search-on-file "hypernyms.txt"))
+  (println "running hypernyms.txt")
+  (crit/bench (random-ancestor-search-on-file "hypernyms.txt"))
 
+  (println "running hypernyms100k.txt")
   (crit/bench (random-ancestor-search-on-file "hypernyms100k.txt"))
 
+  (println "running hypernyms200k.txt")
   (crit/bench (random-ancestor-search-on-file "hypernyms200k.txt"))
 
+  (println "running hypernyms300k.txt")
   (crit/bench (random-ancestor-search-on-file "hypernyms300k.txt")))
 
 
