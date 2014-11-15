@@ -59,7 +59,7 @@
          visited-vertices {}
          distances (assoc-in {} [starting-vertex-id] 0)]
 
-    (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
+    (if (empty? vertices-to-visit)
 
       distances
 
@@ -71,8 +71,7 @@
 
             (recur (rest vertices-to-visit)
                    visited-vertices
-                   distances
-                   (inc de-infinitizer))
+                   distances)
 
             (do
 
@@ -91,9 +90,6 @@
                             (get-vertices-for-indeces digraph (val vertex-visiting)))
                      (conj visited-vertices vertex-visiting)
                      updated-distances))))))))
-
-
-(shortest-distances test-digraph 4)
 
 
 (def shortest-distances-memo (memoize shortest-distances))
