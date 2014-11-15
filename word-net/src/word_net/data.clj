@@ -111,15 +111,18 @@
 
   (def random-synset-ids (map #(:id %) random-synsets))
 
-  (def closest-ancestor (sap (first random-nouns)
-                             (second random-nouns)
-                             synsets
-                             hypernym-digraph))
-
-  (def closest-ancestor-distance (distance (first random-nouns)
-                                           (second random-nouns)
-                                           synsets
-                                           hypernym-digraph))
+  (def closest-ancestor
+    (sap (first random-nouns)
+         (second random-nouns)
+         synsets
+         hypernym-digraph))
 
   (println-synset closest-ancestor)
+
+  (def closest-ancestor-distance
+    (distance (first random-nouns)
+              (second random-nouns)
+              synsets
+              hypernym-digraph))
+
   (println closest-ancestor-distance))

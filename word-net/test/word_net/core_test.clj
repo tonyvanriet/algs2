@@ -1,43 +1,45 @@
 (ns word-net.core-test
   (:require [clojure.test :refer :all])
   (:require [word-net.core :refer :all])
-  (:require [word-net.digraph :refer :all])
-  (:require [word-net.sap :refer [length ancestor]]))
+  (:require [word-net.digraph :as dig])
+  (:require [word-net.sap :as sap])
+  (:require [word-net.data :as data])
+  (:require [word-net.file-io :as fio]))
 
 
 
 (deftest digraph-tests
 
   (testing "new-connections returns an empty set"
-    (is (= (new-connections) #{})))
+    (is (= (dig/new-connections) #{})))
 
   (testing "add-edge adds an edge"
-    (is (= (add-edge 1 2 (build-new-digraph))
+    (is (= (dig/add-edge 1 2 (dig/build-new-digraph))
            {1 #{2}, 2 #{}})))
 
   (testing "build-new-digraph with no edges returns an empty map"
-    (is (= (build-new-digraph) {})))
+    (is (= (dig/build-new-digraph) {})))
 
   (testing "build-new-digraph returns correct digraph"
-    (is (= (build-new-digraph
+    (is (= (dig/build-new-digraph
             [[1 2] [3 5]]) {1 #{2}, 3 #{5}, 2 #{}, 5 #{}})))
 
   (testing "num-vertices"
-    (is (= 7 (num-vertices
-              (build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
+    (is (= 7 (dig/num-vertices
+              (dig/build-new-digraph [[1 2][3 4][5 6][5 7]]))))))
 
   (testing "num-edges"
-    (is (= 4 (num-edges (build-new-digraph [[1 2][3 4][5 6][5 7]])))))
+    (is (= 4 (dig/num-edges (dig/build-new-digraph [[1 2][3 4][5 6][5 7]])))))
 
   (testing "digraph-edges returns edges"
     (def edges #{[1 2] [3 4] [3 5]})
-    (is (= (digraph->edges (build-new-digraph edges)))))
+    (is (= (dig/digraph->edges (dig/build-new-digraph edges)))))
 
   (testing "reverse-edge reverses an edge"
-    (is (= (reverse-edge [1 2]) [2 1])))
+    (is (= (dig/reverse-edge [1 2]) [2 1])))
 
   (testing "reverse-digraph returns reversed digraph"
-    (is (= (reverse-digraph {1 #{2 3}, 2 #{}, 3 #{}, 4 #{5 6}, 5 #{}, 6 #{}})
+    (is (= (dig/reverse-digraph {1 #{2 3}, 2 #{}, 3 #{}, 4 #{5 6}, 5 #{}, 6 #{}})
            {1 #{}, 2 #{1}, 3 #{1}, 4 #{}, 5 #{4}, 6 #{4}})))
 
 
@@ -45,20 +47,36 @@
 (def test-digraph-edges [[12 10] [11 10] [10 5] [9 5] [8 3]
                          [7 3] [3 1] [4 1] [5 1] [1 0] [2 0]])
 
-(def test-digraph (build-new-digraph test-digraph-edges))
+(def test-digraph (dig/build-new-digraph test-digraph-edges))
 
 ; the shortest ancestral path between 3 and 11 has length 4 (with common ancestor 1).
 
 (deftest sap-tests
 
   (testing "sap length"
-    (is (= 4 (length 3 11 test-digraph))))
+    (is (= 4 (sap/length 3 11 test-digraph))))
 
   (testing "closest ancestor"
-    (is (= 1 (ancestor 3 11 test-digraph))))
+    (is (= 1 (sap/ancestor 3 11 test-digraph))))
 
   (testing "sap length 2"
-    (is (= 3 (length 2 5 test-digraph))))
+    (is (= 3 (sap/length 2 5 test-digraph))))
 
   (testing "closest ancestor 2"
-    (is (= 0 (ancestor 2 5 test-digraph)))))
+    (is (= 0 (sap/ancestor 2 5 test-digraph)))))
+
+
+
+(deftest word-net-search-tests
+
+  (testing "ancestor search in synsets and hypernyms"
+    (def ancestor-synset
+      (data/sap "black-backed_gull"
+                "Nathaniel_Bowditch"
+                (fio/get-synsets-from-file (str fio/file-path "synsets.txt"))
+                (fio/get-hypernym-digraph-from-file (str fio/file-path "hypernyms.txt")))))
+  (is (= "organism" (first (:nouns ancestor-synset)))))
+
+
+
+
