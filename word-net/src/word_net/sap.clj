@@ -43,7 +43,7 @@
 
 
 
-(defn shortest-distances
+(defn -shortest-distances
 
   "uses a breadth-first search to compute the shortest-distance to each vertex
   starting from the given vertex. the results are returns as a map keyed by the vertex
@@ -57,8 +57,7 @@
 
   (loop [vertices-to-visit (conj {} starting-vertex)
          visited-vertices {}
-         distances (assoc-in {} [starting-vertex-id] 0)
-         de-infinitizer 0]
+         distances (assoc-in {} [starting-vertex-id] 0)]
 
     (if (or (empty? vertices-to-visit) (> de-infinitizer 100))
 
@@ -91,12 +90,13 @@
               (recur (merge (into {} (rest vertices-to-visit))
                             (get-vertices-for-indeces digraph (val vertex-visiting)))
                      (conj visited-vertices vertex-visiting)
-                     updated-distances
-                     (inc de-infinitizer)))))))))
+                     updated-distances))))))))
 
 
 (shortest-distances test-digraph 4)
 
+
+(def shortest-distances-memo (memoize shortest-distances))
 
 
 (defn ancestral-distances
@@ -108,8 +108,8 @@
 
   ; perform a breadth-first search from each vertex v and w, accumulating the shortest distance
   ; to each other vertex.
-  (def distances-from-v (shortest-distances digraph v))
-  (def distances-from-w (shortest-distances digraph w))
+  (def distances-from-v (shortest-distances-memo digraph v))
+  (def distances-from-w (shortest-distances-memo digraph w))
 
   (reduce (fn [ancestral-distances vertex-id]
             (let [distance-from-v (get distances-from-v vertex-id)]
