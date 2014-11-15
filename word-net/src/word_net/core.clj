@@ -9,10 +9,26 @@
   (:require [criterium.core :as crit]))
 
 
+(def synsets-file-name "synsets.txt")
+
+
+(defn random-ancestor-search-on-file
+
+  [hypernyms-file-name]
+
+  (let [synsets (fio/get-synsets-from-file
+                 (str fio/file-path synsets-file-name))
+        hypernym-digraph (fio/get-hypernym-digraph-from-file
+                          (str fio/file-path hypernyms-file-name))]
+
+    (data/random-ancestor-search synsets hypernym-digraph)))
+
+
+
 (defn -main
   [& args]
 
-  (def synsets-file-name (or (first args) "synsets.txt"))
+  (def synsets-file-name (or (first args) synsets-file-name))
   (def hypernyms-file-name (or (second args) "hypernyms.txt"))
 
   (def synsets
@@ -25,7 +41,14 @@
 
   ;(time (data/random-ancestor-search synsets hypernym-digraph))
 
-  (crit/bench (data/random-ancestor-search synsets hypernym-digraph)))
+  ;(crit/bench (random-ancestor-search-on-file "hypernyms.txt"))
+
+  (crit/bench (random-ancestor-search-on-file "hypernyms100k.txt"))
+
+  (crit/bench (random-ancestor-search-on-file "hypernyms200k.txt"))
+
+  (crit/bench (random-ancestor-search-on-file "hypernyms300k.txt")))
+
 
 
 
