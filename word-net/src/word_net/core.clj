@@ -5,7 +5,8 @@
   (:require [word-net.digraph :as dig])
   (:require [word-net.file-io :as fio])
   (:require [word-net.sap :as sap])
-  (:require [word-net.data :as data]))
+  (:require [word-net.data :as data])
+  (:require [criterium.core :as crit]))
 
 
 (defn -main
@@ -20,7 +21,11 @@
   (def hypernym-digraph
     (fio/get-hypernym-digraph-from-file (str fio/file-path hypernyms-file-name)))
 
-  (repeatedly 100 #(time (data/random-ancestor-search synsets hypernym-digraph))))
+  ;(repeatedly 100 #(time (data/random-ancestor-search synsets hypernym-digraph)))
+
+  ;(time (data/random-ancestor-search synsets hypernym-digraph))
+
+  (crit/bench (data/random-ancestor-search synsets hypernym-digraph)))
 
 
 

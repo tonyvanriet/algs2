@@ -95,8 +95,8 @@
 
   [synsets hypernym-digraph]
 
-  (println "")
-  (println "-------------------------")
+;;   (println "")
+;;   (println "-------------------------")
 
   (def nouns (nouns-in-synsets synsets))
 
@@ -104,25 +104,22 @@
   (def random-nouns (repeatedly 2 #(nth nouns (rand-int (count nouns)))))
   (def random-synsets (map #(get-synset-for-noun % synsets) random-nouns))
 
-  ;(println random-nouns)
-  (println-synset (first random-synsets))
-  (println-synset (second random-synsets))
-
+;;   (println-synset (first random-synsets))
+;;   (println-synset (second random-synsets))
 
   (def random-synset-ids (map #(:id %) random-synsets))
 
-  (def closest-ancestor
-    (sap (first random-nouns)
-         (second random-nouns)
-         synsets
-         hypernym-digraph))
+  (def noun-a (first random-nouns))
+  (def noun-b (second random-nouns))
 
-  (println-synset closest-ancestor)
+  (def closest-ancestor
+    (sap noun-a noun-b synsets hypernym-digraph))
+
+;;   (println-synset closest-ancestor)
 
   (def closest-ancestor-distance
-    (distance (first random-nouns)
-              (second random-nouns)
-              synsets
-              hypernym-digraph))
+    (distance noun-a noun-b synsets hypernym-digraph))
 
-  (println closest-ancestor-distance))
+;;   (println closest-ancestor-distance)
+
+  (println [noun-a noun-b closest-ancestor-distance (first (:nouns closest-ancestor))]))
