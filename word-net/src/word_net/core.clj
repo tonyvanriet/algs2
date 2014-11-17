@@ -24,7 +24,6 @@
     (data/random-ancestor-search synsets hypernym-digraph)))
 
 
-
 (defn -main
   [& args]
 
@@ -38,20 +37,23 @@
     (fio/get-hypernym-digraph-from-file (str fio/file-path hypernyms-file-name)))
 
   ;(repeatedly 100 #(time (data/random-ancestor-search synsets hypernym-digraph)))
+  ; wonder why println's don't get through when I use repeatedly?
 
   ;(time (data/random-ancestor-search synsets hypernym-digraph))
 
-  (println "running hypernyms.txt")
-  (crit/bench (random-ancestor-search-on-file "hypernyms.txt"))
+    (println "running hypernyms.txt")
+    (crit/bench (random-ancestor-search-on-file "hypernyms.txt"))
 
-  (println "running hypernyms100k.txt")
-  (crit/bench (random-ancestor-search-on-file "hypernyms100k.txt"))
+;;   (println "running hypernyms100k.txt")
+;;   (crit/bench (random-ancestor-search-on-file "hypernyms100k.txt"))
 
-  (println "running hypernyms200k.txt")
-  (crit/bench (random-ancestor-search-on-file "hypernyms200k.txt"))
+;;   (println "running hypernyms200k.txt")
+;;   (crit/bench (random-ancestor-search-on-file "hypernyms200k.txt"))
 
-  (println "running hypernyms300k.txt")
-  (crit/bench (random-ancestor-search-on-file "hypernyms300k.txt")))
+;;   (println "running hypernyms300k.txt")
+;;   (crit/bench (random-ancestor-search-on-file "hypernyms300k.txt"))
+
+  )
 
 
 
