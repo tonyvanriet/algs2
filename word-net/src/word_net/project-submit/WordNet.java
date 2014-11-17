@@ -1,8 +1,6 @@
-import java.net.URLClassLoader;
-import java.io.File;
-//import clojure.java.api;
-import clojure.lang.RT;
-import clojure.lang.Var;
+import clojure.lang.IFn;
+import clojure.java.api.Clojure;
+
 
 
 public class WordNet {
@@ -35,6 +33,17 @@ public class WordNet {
 
    // do unit testing of this class
    public static void main(String[] args) {
+
+      IFn plus = Clojure.var("clojure.core", "+");
+      System.out.println(plus.invoke(1, 2));
+
+      IFn require = Clojure.var("clojure.core", "require");
+      require.invoke(Clojure.read("word-net.core"));
+
+      IFn randomSearch = Clojure.var("word-net.core", "random-ancestor-search-on-file");
+      randomSearch.invoke("hypernyms.txt");
+
    }
 
 }
+
